@@ -33,7 +33,7 @@ if (args.help || args.h){
 }
 
 args['port'];
-const port = args.port || process.env.PORT || 3000
+const port = args.port || process.env.PORT || 5555
 args['debug'];
 args['log'];
 args['help'];
