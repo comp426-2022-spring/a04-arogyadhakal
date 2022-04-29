@@ -43,22 +43,23 @@ app.listen(port, () => {
 });
 
 if (args.log == 'true'){
-    const accessLog = fs.createWriteStream('accessLog', {flags: 'a'})
-    app.use(morgan('combined', {stream: accessLog}))
+    const writeStream = fs.createWriteStream('access.log', {flags: 'a'})
+    app.use(morgan('combined', {stream: writeStream}))
 }
 
 app.use((req, res, next) => {
     let logdata = {
-        remoteaddr: req.ip,
-        remoteuser: req.user,
-        time: Date.now(),
-        method: req.method,
-        url: req.url,
-        protocol: req.protocol,
-        httpversion: req.httpVersion,
-        status: res.statusCode,
-        referrer: req.headers['referer'],
-        useragent: req.headers['user-agent']
+      remoteaddr: req.ip,
+      remoteuser: req.user,
+      time: Date.now(),
+      method: req.method,
+      url: req.url,
+      protocol: req.protocol,
+      httpversion: req.httpVersion,
+      secure: req.secure,
+      status: res.statusCode,
+      referer: req.headers['referer'],
+      useragent: req.headers['user-agent']
     }
     const stmt = db.prepare(`INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     const info = stmt.run(logdata.remoteaddr.toString(), logdata.remoteuser, logdata.time, logdata.method.toString(), logdata.url.toString(), logdata.protocol.toString(), logdata.httpversion.toString(), logdata.secure.toString(), logdata.status.toString(), logdata.referer, logdata.useragent.toString())
