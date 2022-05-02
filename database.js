@@ -34,7 +34,7 @@ if (row === undefined) {
     db.exec(sqlInit);
 // Echo information about what we just did to the console.
     console.log('Your database has been initialized.');
-} else {
+} else { 
 // Since the database already exists, echo that to the console.
     console.log('Database exists.')
 }
